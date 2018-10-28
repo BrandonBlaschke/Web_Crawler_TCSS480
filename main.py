@@ -1,7 +1,7 @@
 import urllib.request
 import re
 import time
-from multiprocessing import Process, Queue, Manager
+from multiprocessing import Process, Manager
 from crawlGraphics import CrawlGraphic
 
 
@@ -125,6 +125,7 @@ pages = 75
 
 # Start Program here
 if __name__ == '__main__':
+
     # Global dictionary  to track visited links
     manger = Manager()
     links = manger.dict()
@@ -137,15 +138,17 @@ if __name__ == '__main__':
     start = time.clock()
     print("Start: ", start)
 
+    # Create a list of processes and start them
     processes = []
-    for i in range(3):
+    num = 3
+    for i in range(num):
         p = Process(target=crawlWeb, args=("urls.txt", queue, links,))
         p.start()
         processes.append(p)
-    # crawlWeb("links.txt", queue, links)
 
-    for j in range(3):
+    for j in range(num):
         processes[j].join()
+
     end = time.clock()
     print("End: ", end)
     delta = end - start
