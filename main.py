@@ -1,5 +1,6 @@
 import urllib.request
 import re
+import time
 from crawlGraphics import CrawlGraphic
 
 
@@ -134,7 +135,13 @@ queue = []
 if __name__ == '__main__':
     createSpider()
     #fileName = input("Enter full file name to be read: ")
+    start = time.clock()
+    print("Start: ", start)
     crawlWeb("urls.txt", queue, links)
+    end = time.clock()
+    print("End: ", end)
+    delta = end - start
+    print("Delta: ", delta)
     createCSV(links)
     graphics = CrawlGraphic(links)
 
