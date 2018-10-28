@@ -37,12 +37,12 @@ class CrawlGraphic(Frame):
 
         # Draw dots and lines
         for i in self.crawlSpace.keys():
-            # print("Node " + str(ids[i]) + " " + i + " and Links:")
+            print("Node " + str(ids[i]) + " " + i + " and Links:")
             x = nodes[i].x
             y = nodes[i].y
 
             for j in nodes[i].links:
-                # print('\t' + j)
+                print('\t' + j)
                 try:
                     canvas.create_line(x, y, nodes[j].x, nodes[j].y)
                 except KeyError:
