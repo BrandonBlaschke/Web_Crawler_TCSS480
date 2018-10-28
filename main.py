@@ -113,7 +113,7 @@ def crawlWeb(fileName, theQueue, crawlSpace):
 
     # Start from queue
     while not theQueue.empty() and len(crawlSpace) < pages:
-        print(len(crawlSpace))
+        # print(len(crawlSpace))
         link = theQueue.get()
         # print(link)
         updateCrawlSpace(link, crawlSpace)
@@ -122,8 +122,6 @@ def crawlWeb(fileName, theQueue, crawlSpace):
 
 # Amount of pages to process
 pages = 75
-
-
 
 # Start Program here
 if __name__ == '__main__':
@@ -139,14 +137,19 @@ if __name__ == '__main__':
     start = time.clock()
     print("Start: ", start)
 
-    p1 = Process(target=crawlWeb, args=("links.txt", queue, links,))
-    p1.start()
+    processes = []
+    for i in range(3):
+        p = Process(target=crawlWeb, args=("urls.txt", queue, links,))
+        p.start()
+        processes.append(p)
     # crawlWeb("links.txt", queue, links)
+
+    for j in range(3):
+        processes[j].join()
     end = time.clock()
     print("End: ", end)
     delta = end - start
     print("Delta: ", delta)
-    p1.join()
     createCSV(links)
     graphics = CrawlGraphic(links)
 
