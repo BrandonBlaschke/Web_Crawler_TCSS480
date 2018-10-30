@@ -35,18 +35,29 @@ class CrawlGraphic(Frame):
     def __createNodes__(self):
 
         # Create all the nodes for the graph
-        nodes = {}
-        count = 0
+        manager = Manager()
+        nodes = manager.dict()
+        nodes["count"] = 0
+
+        processes = []
+        for i in range(2):
+            processes.append(Process(target=self.__createNodesProc__, args=(nodes,)))
+            processes[i].start()
+
+        for i in range(2):
+            processes[i].join()
+        return nodes
+
+    def __createNodesProc__(self, nodes):
         distanceFromCenter = 400
         offset = 450
         for i in self.crawlSpace.keys():
-            angle = self.mapRange(count, 0, len(self.crawlSpace), 0, pi * 2)
+            angle = self.mapRange(nodes["count"], 0, len(self.crawlSpace), 0, pi * 2)
             x = distanceFromCenter * cos(angle) + offset
             y = distanceFromCenter * sin(angle) + offset
-            nodes[i] = Node(x, y, count, i, self.crawlSpace[i])
-            count += 1
-        return nodes
-    
+            nodes[i] = Node(x, y, nodes["count"], i, self.crawlSpace[i])
+            nodes["count"] += 1
+
     # Given the canvas, nodes to draw, and ids of those nodes draws them to the screen
     def __drawGraph__(self, canvas, nodes, ids):
 
@@ -66,6 +77,8 @@ class CrawlGraphic(Frame):
 
             canvas.create_oval(x - width, y - width, x + width, y + width, outline='#000', fill='#FF9216', width=2)
             canvas.create_text(x + 2, y + 2, text=ids[i])
+
+
 
     # Maps a val from one range to another range
     @staticmethod

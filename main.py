@@ -147,7 +147,7 @@ if __name__ == '__main__':
     processes = []
     num = 3
     for i in range(num):
-        p = Process(target=crawlWeb, args=("links.txt", queue, links,))
+        p = Process(target=crawlWeb, args=("urls.txt", queue, links,))
         p.start()
         processes.append(p)
 
