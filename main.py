@@ -4,7 +4,11 @@ import time
 from multiprocessing import Process, Manager
 from crawlGraphics import CrawlGraphic
 
-currentTimeMili = lambda: int(round(time.time() * 1000))
+
+# Gets the current time in milliseconds
+def currentTimeMili():
+    return int(round(time.time() * 1000))
+
 
 # Given a dictionary which contains lists, will create crawl space csv file
 def createCSV(links):

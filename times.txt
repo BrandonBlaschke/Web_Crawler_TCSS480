@@ -1,6 +1,4 @@
 Without concurrency:
-    Start: 2.85
-    End: 119
-    Delta: 119
+    Delta: 128079
 With concurrency
-    Delta: 964
+    Delta: 61359
