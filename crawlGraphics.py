@@ -49,9 +49,14 @@ class CrawlGraphic(Frame):
                 except KeyError:
                     pass
 
-            canvas.create_oval(x - width, y - width, x + width, y + width, outline='#f11', fill='#1f1', width=2)
+            canvas.create_oval(x - width, y - width, x + width, y + width, outline='#000', fill='#FF9216', width=2)
             canvas.create_text(x + 2, y + 2, text=ids[i])
+
         root.mainloop()
+
+    @staticmethod
+    def findSlope(x1, x2, y1, y2):
+        return (y2-y1) / (x2-x1)
 
     # Maps a val from one range to another range
     @staticmethod

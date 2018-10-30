@@ -4,6 +4,7 @@ import time
 from multiprocessing import Process, Manager
 from crawlGraphics import CrawlGraphic
 
+currentTimeMili = lambda: int(round(time.time() * 1000))
 
 # Given a dictionary which contains lists, will create crawl space csv file
 def createCSV(links):
@@ -135,21 +136,21 @@ if __name__ == '__main__':
 
     createSpider()
     #fileName = input("Enter full file name to be read: ")
-    start = time.clock()
+    start = currentTimeMili()
     print("Start: ", start)
 
     # Create a list of processes and start them
     processes = []
     num = 3
     for i in range(num):
-        p = Process(target=crawlWeb, args=("urls.txt", queue, links,))
+        p = Process(target=crawlWeb, args=("links.txt", queue, links,))
         p.start()
         processes.append(p)
 
     for j in range(num):
         processes[j].join()
 
-    end = time.clock()
+    end = currentTimeMili()
     print("End: ", end)
     delta = end - start
     print("Delta: ", delta)
