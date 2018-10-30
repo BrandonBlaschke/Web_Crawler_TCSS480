@@ -28,6 +28,7 @@ class CrawlGraphic(Frame):
         self.__drawGraph__(nodes, canvas, ids)
         root.mainloop()
 
+    # Creates a dictionary of nodes to reference when drawing nodes
     def __createNodes__(self):
 
         # Create all the nodes for the graph
@@ -43,6 +44,7 @@ class CrawlGraphic(Frame):
             count += 1
         return nodes
 
+    # Draws the graph given nodes, canvas, and ids for the nodes
     def __drawGraph__(self, nodes, canvas, ids):
 
         width = 12
