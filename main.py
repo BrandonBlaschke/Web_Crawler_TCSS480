@@ -139,7 +139,7 @@ if __name__ == '__main__':
     queue = manger.Queue()
 
     createSpider()
-    #fileName = input("Enter full file name to be read: ")
+    fileName = input("Enter full file name to be read: ")
     start = currentTimeMili()
     print("Start: ", start)
 
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     processes = []
     num = 3
     for i in range(num):
-        p = Process(target=crawlWeb, args=("urls.txt", queue, links,))
+        p = Process(target=crawlWeb, args=(fileName, queue, links,))
         p.start()
         processes.append(p)
 

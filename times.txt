@@ -1,6 +1,0 @@
-Without concurrency:
-    Delta: 128079
-With concurrency
-    Delta: 61359
-With concurrency and graphics
-    Delta:

@@ -1,9 +1,9 @@
 from tkinter import Tk, Canvas, Frame
 from math import pi, cos, sin
 from Node import Node
-from multiprocessing import Process, Manager
 
 
+# Draws the graph of a given crawlSpace
 class CrawlGraphic(Frame):
 
     # Given a dictionary of the crawl space, will create graphical representation of it.
