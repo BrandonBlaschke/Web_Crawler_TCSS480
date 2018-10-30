@@ -1,14 +1,14 @@
 
 
 # Node class that stores position and other points to connect to
-class Node():
+class Node:
 
     def __init__(self, x, y, id, link, links):
         self.x = x
         self.y = y
         self.id = id
         self.link = link
-        self.links= links
+        self.links = links
 
     def addPoint(self, x, y):
         self.points.append((x,y))

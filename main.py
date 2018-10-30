@@ -1,7 +1,10 @@
 import urllib.request
 import re
+import time
+from multiprocessing import Process, Manager
 from crawlGraphics import CrawlGraphic
 
+currentTimeMili = lambda: int(round(time.time() * 1000))
 
 # Given a dictionary which contains lists, will create crawl space csv file
 def createCSV(links):
@@ -70,9 +73,7 @@ def createSpider():
 
 # Updates the crawl space given the starting link and the ending link,
 # if given just start it adds it to crawl space with a list.
-def updateCrawlSpace(start, des=None):
-
-    global links
+def updateCrawlSpace(start, links, des=None):
 
     if start not in links:
         links[start] = []
@@ -81,21 +82,20 @@ def updateCrawlSpace(start, des=None):
         aList = links[start]
         if des not in aList:
             aList.append(des)
+            links[start] = aList
 
 
 # Parses a HTML web page given the link, adds links found to a queue
-def parseHTML(link, theQueue):
-
-    global links
+def parseHTML(links, link, theQueue):
 
     try:
         page = urllib.request.urlopen(link)
         pageText = page.read()
         linksFound = re.findall('a href[=\s][=\s]?\\"(http[s]?://.*?)\\"', str(pageText))
         for i in linksFound:
-            updateCrawlSpace(link, des=i)
+            updateCrawlSpace(link, links, des=i)
             if i not in links:
-                theQueue.append(i)
+                theQueue.put(i)
     except (urllib.error.HTTPError, urllib.error.URLError) as e:
         print("Can't access link " + link)
 
@@ -109,32 +109,51 @@ def crawlWeb(fileName, theQueue, crawlSpace):
     with open(fileName, 'r') as f:
         link = f.readline().rstrip('\n')
         while link:
-            theQueue.append(link)
+            theQueue.put(link)
             link = f.readline().rstrip('\n')
 
     # Start from queue
-    while len(theQueue) != 0 and len(crawlSpace) < pages:
-        print(len(crawlSpace))
-        link = theQueue.pop(0)
+    while not theQueue.empty() and len(crawlSpace) < pages:
+        # print(len(crawlSpace))
+        link = theQueue.get()
         # print(link)
-        updateCrawlSpace(link)
-        parseHTML(link, theQueue)
+        updateCrawlSpace(link, crawlSpace)
+        parseHTML(crawlSpace, link, theQueue)
 
 
 # Amount of pages to process
 pages = 75
 
-# Global dictionary  to track visited links
-links = {}
-
-# Global queue to start reading from
-queue = []
-
 # Start Program here
 if __name__ == '__main__':
+
+    # Global dictionary  to track visited links
+    manger = Manager()
+    links = manger.dict()
+
+    # Global queue to start reading from
+    queue = manger.Queue()
+
     createSpider()
     #fileName = input("Enter full file name to be read: ")
-    crawlWeb("urls.txt", queue, links)
+    start = currentTimeMili()
+    print("Start: ", start)
+
+    # Create a list of processes and start them
+    processes = []
+    num = 3
+    for i in range(num):
+        p = Process(target=crawlWeb, args=("links.txt", queue, links,))
+        p.start()
+        processes.append(p)
+
+    for j in range(num):
+        processes[j].join()
+
+    end = currentTimeMili()
+    print("End: ", end)
+    delta = end - start
+    print("Delta: ", delta)
     createCSV(links)
     graphics = CrawlGraphic(links)
 
