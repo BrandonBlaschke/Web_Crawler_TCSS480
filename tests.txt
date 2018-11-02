@@ -1,0 +1,30 @@
+To test my web crawler I tested the urls.txt file and got the time it took for the web crawler to get to 75 pages. I
+first started testing without concurrency, the with concurrency, and with more processes. I suspected I should see some
+improvement in time and to get the same graph and results, my results were
+
+Without concurrency: 121,485 milliseconds
+With concurrency (4 Processes): 61,123 milliseconds
+With concurrency (8 Processes): 53,616 milliseconds
+
+To test the graphics I ran the http://faculty.washington.edu/monikaso/a.html files to compare my graph with the graph
+given to us in the assignment instructions. I print the Node number and links to the console in order to check to make
+sure the connections are correct.
+
+For testing my smaller methods in main.py I used Python unit testing in order to test all the small methods I use through
+out the file. I tested
+
+popularLinks Method Tests:
+    No links top
+    One popular possible link
+    Multiple popular links
+
+updateCrawlSpace Method Tests
+    No des variable
+    With des variable initialized
+    Duplicate links
+
+createCSV did not require test cases because it could be checked simply by reading the out of the csv file for small
+graphs.
+
+For the regex expression for finding links I went to regex101 to test out different web pages html that I copied from
+online, checking to see if it got all the correct links.

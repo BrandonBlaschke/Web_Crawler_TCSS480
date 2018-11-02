@@ -5,13 +5,20 @@ from multiprocessing import Process, Manager
 from crawlGraphics import CrawlGraphic
 
 
-# Gets the current time in milliseconds
 def currentTimeMili():
+    """
+    Gets the current time in milliseconds
+    :return: Current time
+    """
     return int(round(time.time() * 1000))
 
 
-# Given a dictionary which contains lists, will create crawl space csv file
 def createCSV(links):
+    """
+    Given a dictionary which contains lists, will create crawl space csv file
+    :param links: Dictionary of links
+    :return: Null
+    """
     with open('crawl.csv', 'w') as f:
         f.write("Page,Links\n")
         for i in links.keys():
@@ -36,8 +43,14 @@ def createCSV(links):
             f.write("No Links, can't find most popular link")
 
 
-# Given a dictionary which contains lists, returns a list of the referenced links in crawl space
+#
 def popularLinks(links):
+
+    """
+    Given a dictionary which contains lists, returns a list of the referenced links in crawl space
+    :param links: dictionary of crawl space
+    :return: List of the most popular links
+    """
 
     trackCounts = {}
 
@@ -61,8 +74,8 @@ def popularLinks(links):
     return mostPop
 
 
-# Prints a spider by Joan Stark :)
 def createSpider():
+    """ Prints a spider by Joan Stark :) """
     print("          _.._       ")
     print("        .'    '.     ")
     print("       /   __   \    ")
@@ -75,9 +88,15 @@ def createSpider():
     print("   WEB  \      /  CRAWLER")
 
 
-# Updates the crawl space given the starting link and the ending link,
-# if given just start it adds it to crawl space with a list.
 def updateCrawlSpace(start, links, des=None):
+    """
+    Updates the crawl space given the starting link and the ending link,
+    if given just start it adds it to crawl space with a list.
+    :param start: Link that is not in or is in links (crawl space)
+    :param links: Crawl Space
+    :param des: destination of link from Link, will add des to Link
+    :return: Null
+    """
 
     if start not in links:
         links[start] = []
@@ -89,8 +108,14 @@ def updateCrawlSpace(start, links, des=None):
             links[start] = aList
 
 
-# Parses a HTML web page given the link, adds links found to a queue
 def parseHTML(links, link, theQueue):
+    """
+    Parses a HTML web page given the link, adds links found to a queue, prints links that can't be accessed.
+    :param links: Crawl space in the form of a dictionary
+    :param link: Link to parse
+    :param theQueue: Queue that will add new links found
+    :return: Null
+    """
 
     try:
         page = urllib.request.urlopen(link)
@@ -104,8 +129,14 @@ def parseHTML(links, link, theQueue):
         print("Can't access link " + link)
 
 
-# Crawls the web by first reading a file line by line and starts crawling on those links
 def crawlWeb(fileName, theQueue, crawlSpace):
+    """
+    Crawls the web by first reading a file line by line and starts crawling on those links
+    :param fileName: Name of file to get the initial links from
+    :param theQueue: Queue that will be used to traverse the graph
+    :param crawlSpace: Dictionary to save the graph and connections in
+    :return: Null
+    """
 
     global pages
 
@@ -139,7 +170,6 @@ if __name__ == '__main__':
     queue = manger.Queue()
 
     createSpider()
-    fileName = input("Enter full file name to be read: ")
     start = currentTimeMili()
     print("Start: ", start)
 
@@ -147,17 +177,25 @@ if __name__ == '__main__':
     processes = []
     num = 3
     for i in range(num):
-        p = Process(target=crawlWeb, args=(fileName, queue, links,))
+        p = Process(target=crawlWeb, args=('urls.txt', queue, links,))
         p.start()
         processes.append(p)
 
     for j in range(num):
         processes[j].join()
 
+    # Write CSV and Graphics at the same time
+    csvProc = Process(target=createCSV, args=(links,))
+    graphicsProc = Process(target=CrawlGraphic, args=(links,))
+    csvProc.start()
+    graphicsProc.start()
+
     end = currentTimeMili()
     print("End: ", end)
     delta = end - start
     print("Delta: ", delta)
-    createCSV(links)
-    graphics = CrawlGraphic(links)
+
+    csvProc.join()
+    graphicsProc.join()
+
 
