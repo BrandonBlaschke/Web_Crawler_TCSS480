@@ -1,6 +1,6 @@
-from tkinter import Tk, Canvas, Frame, Scrollbar, RIGHT, Y, X, BOTTOM, HORIZONTAL, VERTICAL, LEFT, YES, BOTH
+from tkinter import Tk, Canvas, Scrollbar, RIGHT, Y, X, BOTTOM, HORIZONTAL, VERTICAL
 from math import pi, cos, sin
-from Node import Node
+from node import Node
 
 
 class CrawlGraphic:

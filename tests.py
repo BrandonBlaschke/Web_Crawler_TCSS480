@@ -2,8 +2,8 @@ import unittest
 from main import popularLinks, updateCrawlSpace
 
 
-# Test class to run some unit tests on the web crawler functions
 class TestMethods(unittest.TestCase):
+    """  Test class to run some unit tests on the web crawler functions """
 
     def testMostPopMul(self):
 
